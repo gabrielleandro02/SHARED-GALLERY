@@ -130,6 +130,7 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.sharedgallery"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -185,7 +186,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.5.0'
     implementation 'com.google.firebase:firebase-core:17.5.0'
     implementation 'com.google.firebase:firebase-auth:19.3.2'
+    implementation 'androidx.multidex:multidex:2.0.1' 
 
+        
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules

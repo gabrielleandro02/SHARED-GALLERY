@@ -10,6 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import {useAuth} from '../contexts/auth.context';
+import auth from '@react-native-firebase/auth';
 
 import Logo from '../assets/logo.png';
 
@@ -61,9 +62,14 @@ const LoginPage = () => {
     [secure, setSecure] = useState(true),
     {signin} = useAuth();
 
-  const handleSignin = () => {
-    console.log({email, password, phone});
-    // signin();
+  const handleSignin = async () => {
+    try {
+      const user = await auth().signInWithEmailAndPassword(email, password);
+      console.log(user);
+      signin();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
