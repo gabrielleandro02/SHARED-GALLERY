@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "996680942459",
+    "firebase_url": "https://shared-gallery.firebaseio.com",
+    "project_id": "shared-gallery",
+    "storage_bucket": "shared-gallery.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996680942459:android:9d7aa4ae32357ca053b3de",
+        "android_client_info": {
+          "package_name": "com.sharedgallery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "996680942459-qtk85r50o78jtj58a7pj6ibg6gm8vv5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3RhxJZg4b0IKP88B4Ni8Nre039NUhDcE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "996680942459-qtk85r50o78jtj58a7pj6ibg6gm8vv5s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
