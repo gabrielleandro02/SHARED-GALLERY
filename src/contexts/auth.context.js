@@ -1,42 +1,40 @@
 import React, {createContext, useState, useEffect, useContext} from 'react';
-import * as auth from '../services/auth.service';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({children}) => {
-  const [user, setUser] = useState(Object | null);
+  const [authenticatedUser, setAuthenticatedUser] = useState(Object | null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const signin = async () => {
-    const response = await auth.signin();
-    setUser(response.user);
-
-    await AsyncStorage.setItem(
-      '@reactnavigation:user',
-      JSON.stringify(response.user),
-    );
-    await AsyncStorage.setItem(
-      '@reactnavigation:token',
-      JSON.stringify(response.token),
-    );
+  const signin = async (user) => {
+    try {
+      setAuthenticatedUser(user);
+      setToken(user.uid);
+      await AsyncStorage.multiSet([
+        ['@auth_user', JSON.stringify(user)],
+        ['@token', JSON.stringify(user.uid)],
+      ]);
+    } catch (e) {
+      console.log('LOGIN ERROR: ', e);
+    }
   };
 
-  const signout = () => {
-    AsyncStorage.clear().then((res) => {
-      setUser(null);
-    });
+  const logout = async () => {
+    setAuthenticatedUser(null);
+    setToken(null);
+    await AsyncStorage.multiRemove(['@auth_user', '@token']);
   };
 
   useEffect(() => {
     const loadStorageGetData = async () => {
-      const storagedUser = await AsyncStorage.getItem('@reactnavigation:user');
-      const storagedToken = await AsyncStorage.getItem(
-        '@reactnavigation:token',
-      );
+      const storagedUser = await AsyncStorage.getItem('@auth_user');
+      const storagedToken = await AsyncStorage.getItem('@token');
 
       if (storagedToken && storagedUser) {
-        setUser(JSON.parse(storagedUser));
+        setAuthenticatedUser(JSON.parse(storagedUser));
+        setToken(JSON.parse(storagedToken));
       }
       setLoading(false);
     };
@@ -45,7 +43,14 @@ export const AuthProvider = ({children}) => {
 
   return (
     <AuthContext.Provider
-      value={{signed: !!user, token: '', user: {}, signin, signout, loading}}>
+      value={{
+        signed: !!authenticatedUser,
+        token: null,
+        authenticatedUser: {},
+        signin,
+        logout,
+        loading,
+      }}>
       {children}
     </AuthContext.Provider>
   );
@@ -53,6 +58,6 @@ export const AuthProvider = ({children}) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throwContextError(AuthContext);
+  if (!context) throwContextError('Auth');
   return context;
 };

@@ -49,9 +49,7 @@ const HomePage = ({navigation}) => {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-      enabled
-      keyboardVerticalOffset={150}>
+      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
       <View style={styles.containerLogo}>
         <Image source={Logo} />
       </View>

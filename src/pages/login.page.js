@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import {useAuth} from '../contexts/auth.context';
-import auth from '@react-native-firebase/auth';
+import {login} from '../services/auth.service';
 
 import Logo from '../assets/logo.png';
 
@@ -64,11 +64,13 @@ const LoginPage = () => {
 
   const handleSignin = async () => {
     try {
-      const user = await auth().signInWithEmailAndPassword(email, password);
+      const {user} = await login(email, password);
       console.log(user);
-      signin();
-    } catch (error) {
-      console.log(error);
+      if (user && user?.uid) {
+        signin(user);
+      }
+    } catch (errorMessage) {
+      console.log(errorMessage);
     }
   };
 
@@ -76,7 +78,6 @@ const LoginPage = () => {
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-      enabled
       keyboardVerticalOffset={150}>
       <View style={styles.containerLogo}>
         <Image source={Logo} />
