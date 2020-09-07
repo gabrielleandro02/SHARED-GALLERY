@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '85%',
   },
-  buttonRegister: {
+  button: {
     alignItems: 'center',
     marginTop: 30,
     justifyContent: 'center',
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     padding: 10,
   },
-  textRegister: {
+  textButton: {
     color: '#fff',
     fontSize: 16,
   },
@@ -56,14 +56,14 @@ const HomePage = ({navigation}) => {
       <View style={styles.buttonContainer}>
         <Text style={styles.textQuestion}>O que você deseja fazer?</Text>
         <TouchableOpacity
-          style={styles.buttonRegister}
+          style={styles.button}
           onPress={() => navigation.navigate('LoginPage')}>
-          <Text style={styles.textRegister}>Entrar</Text>
+          <Text style={styles.textButton}>Entrar</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.buttonRegister}
+          style={styles.button}
           onPress={() => navigation.navigate('SigninPage')}>
-          <Text style={styles.textRegister}>Criar conta</Text>
+          <Text style={styles.textButton}>Criar conta</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

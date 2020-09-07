@@ -37,9 +37,9 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 0.5,
     borderRadius: 15,
-    padding: 14,
+    padding: 10,
     marginTop: 20,
-    fontSize: 16,
+    fontSize: 15,
   },
   buttonRegister: {
     marginTop: 20,
@@ -112,10 +112,9 @@ const LoginPage = () => {
         }) => (
           <View style={styles.containerInputs}>
             <TextInput
-              textContentType={'emailAddress'}
+              keyboardType={'email-address'}
               style={styles.input}
               placeholder="Email"
-              autoCorrect={false}
               ref={email}
               value={values.email}
               onBlur={() => setFieldTouched('email', true)}
@@ -129,7 +128,6 @@ const LoginPage = () => {
               textContentType={'password'}
               style={styles.input}
               placeholder="Senha"
-              autoCorrect={false}
               ref={password}
               value={values.password}
               onBlur={() => setFieldTouched('password', true)}
