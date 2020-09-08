@@ -2,10 +2,10 @@ import React from 'react';
 import {
   View,
   Text,
-  KeyboardAvoidingView,
   Image,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 
 import Logo from '../assets/logo.png';
@@ -47,9 +47,7 @@ const styles = StyleSheet.create({
 
 const HomePage = ({navigation}) => {
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.containerLogo}>
         <Image source={Logo} />
       </View>
@@ -66,7 +64,7 @@ const HomePage = ({navigation}) => {
           <Text style={styles.textButton}>Criar conta</Text>
         </TouchableOpacity>
       </View>
-    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 

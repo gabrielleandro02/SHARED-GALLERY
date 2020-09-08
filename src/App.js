@@ -9,12 +9,10 @@ import Routes from './routes/index';
 
 const App = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer independent>
       <AuthProvider>
-        <Root>
-          <StatusBar barStyle="light-content" backgroundColor="#573ea8" />
-          <Routes />
-        </Root>
+        <StatusBar barStyle="light-content" backgroundColor="#573ea8" />
+        <Routes />
       </AuthProvider>
     </NavigationContainer>
   );

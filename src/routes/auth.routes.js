@@ -14,7 +14,6 @@ const AuthRoutes = () => (
   <AuthStack.Navigator
     initialRouteName="HomePage"
     screenOptions={{
-      backgroundColor: '#fff',
       gestureEnabled: true,
       gestureDirection: 'horizontal',
       cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
@@ -41,7 +40,7 @@ const AuthRoutes = () => (
       name="HomePage"
       component={HomePage}
       options={{
-        title: 'Início',
+        headerShown: false,
       }}
     />
   </AuthStack.Navigator>

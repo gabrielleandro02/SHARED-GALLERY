@@ -78,9 +78,8 @@ const LoginPage = () => {
   const handleSignin = async (values) => {
     try {
       const {user} = await login(values.email, values.password);
-      console.log(user);
       if (user && user?.uid) {
-        signin(user);
+        await signin(user);
       }
     } catch (errorMessage) {
       console.log(errorMessage);

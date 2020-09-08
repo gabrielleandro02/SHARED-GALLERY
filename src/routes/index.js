@@ -4,8 +4,8 @@ import AuthRoutes from './auth.routes';
 import {useAuth} from '../contexts/auth.context';
 
 const Routes = () => {
-  const {signed} = useAuth();
+  const {signed, loading} = useAuth();
 
-  return signed ? <AppRoutes /> : <AuthRoutes />;
+  return signed && !loading ? <AppRoutes /> : <AuthRoutes />;
 };
 export default Routes;
