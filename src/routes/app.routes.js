@@ -18,7 +18,11 @@ const AppRoutes = () => (
       headerTitleStyle: {color: 'white'},
       headerTitleAlign: 'center',
     }}>
-    <AppStack.Screen name="DashboardPage" component={DashboardPage} />
+    <AppStack.Screen
+      name="DashboardPage"
+      options={{title: 'Painel'}}
+      component={DashboardPage}
+    />
   </AppStack.Navigator>
 );
 

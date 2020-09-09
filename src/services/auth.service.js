@@ -1,6 +1,5 @@
 import auth from '@react-native-firebase/auth';
 import {firebaseErrorsEnum} from '../enums/firebase-errors.enum';
-import {create} from 'react-test-renderer';
 
 export const login = async (email, password) => {
   try {

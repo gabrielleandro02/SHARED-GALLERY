@@ -63,8 +63,7 @@ const styles = StyleSheet.create({
 const LoginPage = () => {
   const email = useRef(null),
     password = useRef(null),
-    [secure, setSecure] = useState(true),
-    {signin} = useAuth();
+    {saveAuthenticatedUser} = useAuth();
 
   const FormSchema = Yup.object().shape({
     email: Yup.string()
@@ -79,7 +78,7 @@ const LoginPage = () => {
     try {
       const {user} = await login(values.email, values.password);
       if (user && user?.uid) {
-        await signin(user);
+        await saveAuthenticatedUser(user);
       }
     } catch (errorMessage) {
       console.log(errorMessage);

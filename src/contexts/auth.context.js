@@ -1,21 +1,16 @@
 import React, {createContext, useState, useEffect, useContext} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 
-const AuthContext = createContext({});
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({children}) => {
-  const [authenticatedUser, setAuthenticatedUser] = useState(Object | null);
-  const [token, setToken] = useState(null);
+  const [authenticatedUser, setAuthenticatedUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const signin = async (user) => {
+  const saveAuthenticatedUser = async (user) => {
     try {
       setAuthenticatedUser(user);
-      setToken(user.uid);
-      await AsyncStorage.multiSet([
-        ['@auth_user', JSON.stringify(user)],
-        ['@token', JSON.stringify(user.uid)],
-      ]);
+      await AsyncStorage.setItem('@auth_user', JSON.stringify(user));
     } catch (e) {
       console.log('LOGIN ERROR: ', e);
     }
@@ -23,18 +18,15 @@ export const AuthProvider = ({children}) => {
 
   const logout = async () => {
     setAuthenticatedUser(null);
-    setToken(null);
-    await AsyncStorage.multiRemove(['@auth_user', '@token']);
+    await AsyncStorage.removeItem('@auth_user');
   };
 
   useEffect(() => {
     const loadStorageGetData = async () => {
       const storagedUser = await AsyncStorage.getItem('@auth_user');
-      const storagedToken = await AsyncStorage.getItem('@token');
 
-      if (storagedToken && storagedUser) {
-        setAuthenticatedUser(JSON.parse(storagedUser));
-        setToken(JSON.parse(storagedToken));
+      if (storagedUser) {
+        saveAuthenticatedUser(storagedUser);
       }
       setLoading(false);
     };
@@ -45,9 +37,9 @@ export const AuthProvider = ({children}) => {
     <AuthContext.Provider
       value={{
         signed: !!authenticatedUser,
-        token: null,
-        authenticatedUser: {},
-        signin,
+        authenticatedUser,
+        setAuthenticatedUser,
+        saveAuthenticatedUser,
         logout,
         loading,
       }}>
