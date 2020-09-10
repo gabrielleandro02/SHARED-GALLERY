@@ -9,6 +9,7 @@ import {
   Platform,
   SafeAreaView,
 } from 'react-native';
+import {Toast} from 'native-base';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useAuth} from '../contexts/auth.context';
 import {signUp} from '../services/auth.service';
@@ -92,7 +93,12 @@ const SigninPage = ({navigation}) => {
         navigation.navigate('LoginPage');
       }
     } catch (error) {
-      console.log(error);
+      Toast.show({
+        text: `${error}`,
+        buttonText: 'Ok',
+        duration: 4000,
+        type: 'danger',
+      });
     }
   };
 

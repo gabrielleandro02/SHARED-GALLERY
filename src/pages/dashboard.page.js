@@ -4,14 +4,14 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {useAuth} from '../contexts/auth.context';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import MyPhotosPage from './myPhotos.page';
+import MyPhotosPage from './my-photos.page';
+import ProfilePage from './profile.page';
+import ExplorerPage from './explorer.page';
 
 function HomeScreen() {
-  const {logout} = useAuth();
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>Home!</Text>
-      <Button onPress={() => logout()} title="Sair"></Button>
     </View>
   );
 }
@@ -25,9 +25,12 @@ function SettingsScreen() {
 }
 
 function MyDataScreen() {
+  const {logout} = useAuth();
+
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>MyDataScreen!</Text>
+      <Button onPress={() => logout()} title="Sair"></Button>
     </View>
   );
 }
@@ -44,11 +47,11 @@ export default function DashboardPage() {
         sceneAnimationEnabled
         barStyle={{backgroundColor: '#694fad', paddingVertical: 3}}>
         <Tab.Screen
-          name="Home"
-          component={HomeScreen}
+          name="Explorer"
+          component={ExplorerPage}
           options={{
-            tabBarLabel: 'Home',
-            tabBarIcon: () => <Icons name="home" color={'white'} size={26} />,
+            tabBarLabel: 'Explorar',
+            tabBarIcon: () => <Icons name="public" color={'white'} size={26} />,
           }}
         />
         <Tab.Screen
@@ -61,7 +64,7 @@ export default function DashboardPage() {
         />
         <Tab.Screen
           name="Profile"
-          component={MyDataScreen}
+          component={ProfilePage}
           options={{
             tabBarLabel: 'Perfil',
             tabBarIcon: () => <Icons name="person" color={'white'} size={26} />,

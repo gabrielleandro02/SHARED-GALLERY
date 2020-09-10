@@ -26,7 +26,7 @@ export const AuthProvider = ({children}) => {
       const storagedUser = await AsyncStorage.getItem('@auth_user');
 
       if (storagedUser) {
-        saveAuthenticatedUser(storagedUser);
+        saveAuthenticatedUser(JSON.parse(storagedUser));
       }
       setLoading(false);
     };

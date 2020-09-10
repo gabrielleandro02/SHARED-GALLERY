@@ -80,8 +80,13 @@ const LoginPage = () => {
       if (user && user?.uid) {
         await saveAuthenticatedUser(user);
       }
-    } catch (errorMessage) {
-      console.log(errorMessage);
+    } catch (error) {
+      Toast.show({
+        text: `${error}`,
+        buttonText: 'Ok',
+        duration: 4000,
+        type: 'danger',
+      });
     }
   };
 

@@ -6,14 +6,17 @@ import {
   FlatList,
   Modal,
   ActivityIndicator,
+  Text,
 } from 'react-native';
+import {ProgressBar} from 'react-native-paper';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {FloatingAction} from 'react-native-floating-action';
-import {upload} from '../services/files.service';
 import {imagePickerOptions, getFileLocalPath} from '../utils/upload-image.util';
 import ImagePicker from 'react-native-image-picker';
 import {useAuth} from '../contexts/auth.context';
+import storage from '@react-native-firebase/storage';
+import {Toast} from 'native-base';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,6 +32,11 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '97%',
     resizeMode: 'contain',
+  },
+  gridImage: {
+    flex: 1,
+    flexDirection: 'column',
+    margin: 1,
   },
   modelStyle: {
     flex: 1,
@@ -53,18 +61,29 @@ const styles = StyleSheet.create({
   loadingActivity: {
     marginVertical: 20,
   },
+  modalSendingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalSendingBackground: {
+    backgroundColor: 'white',
+    padding: 25,
+    width: '85%',
+  },
+  modalSendingText: {
+    marginBottom: 30,
+    fontSize: 18,
+  },
 });
 
 export default function MyPhotosPage() {
   const [imageuri, setImageuri] = useState('');
-  const [image, setImage] = useState({
-    fileName: '',
-    type: '',
-    uri: '',
-  });
   const [modalVisibleStatus, setModalVisibleStatus] = useState(false);
-  const [dataSource, setDataSource] = useState([]);
+  const [dataSource, setDataSource] = useState([{id: null, uid: ''}]);
   const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
+  const [sendingProgress, setSendingProgress] = useState(0.1);
   const {authenticatedUser} = useAuth();
 
   const actions = [
@@ -77,21 +96,85 @@ export default function MyPhotosPage() {
   ];
 
   const showModalFunction = (visible, imageURL) => {
-    setModalVisibleStatus(visible);
     setImageuri(imageURL);
+    setModalVisibleStatus(visible);
   };
 
-  const uploadData = async () => {
+  const downloadMyPhotos = async () => {
     try {
-      await upload(image, authenticatedUser);
-    } catch (error) {
-      console.log('erro dentro');
+      const addImageToArray = async (imageRef) => {
+        const imageUrl = await imageRef.getDownloadURL();
+        setDataSource([...dataSource, {id: imageRef.name, uid: imageUrl}]);
+      };
+
+      const images = await storage()
+        .ref(`images/${authenticatedUser.uid}`)
+        .listAll();
+      images.items.forEach((imageRef) => addImageToArray(imageRef));
+    } catch {
+      text: 'Não foi possível baixar algumas imagens';
+      Toast.show({
+        text: 'Não foi possível baixar algumas imagens',
+        buttonText: 'Ok',
+        duration: 3000,
+        type: 'danger',
+      });
     }
   };
 
   useEffect(() => {
+    downloadMyPhotos();
     setLoading(false);
   }, []);
+
+  const uploadData = async (sourceImage) => {
+    try {
+      await storage()
+        .ref(`images/${sourceImage.userUid}/${sourceImage.fileName}`)
+        .putFile(sourceImage.uri)
+        .on('state_changed', (stateUpload) => {
+          setSending(true);
+          switch (stateUpload.state) {
+            case 'running':
+              setSendingProgress(
+                stateUpload.bytesTransferred / stateUpload.totalBytes,
+              );
+              break;
+            case 'success':
+              setSendingProgress(1);
+              setSending(false);
+              break;
+            case 'error':
+              stateUpload.task.cancel();
+              setSending(false);
+              Toast.show({
+                text: 'Não foi possível enviar sua imagem',
+                buttonText: 'Ok',
+                duration: 3000,
+                type: 'danger',
+              });
+              break;
+            default:
+              Toast.show({
+                text: 'Não foi possível enviar sua imagem',
+                buttonText: 'Ok',
+                duration: 3000,
+                type: 'danger',
+              });
+              stateUpload.task.cancel();
+          }
+        });
+      await downloadMyPhotos();
+      setLoading(false);
+    } catch (error) {
+      Toast.show({
+        text: 'Não foi possível enviar sua imagem',
+        buttonText: 'Ok',
+        duration: 4000,
+        type: 'danger',
+      });
+    }
+  };
 
   return modalVisibleStatus ? (
     <Modal
@@ -128,18 +211,27 @@ export default function MyPhotosPage() {
         />
       ) : null}
 
+      <Modal onDismiss={() => setSending(false)} transparent visible={sending}>
+        <View style={styles.modalSendingContainer}>
+          <View style={styles.modalSendingBackground}>
+            <Text style={styles.modalSendingText}>Enviando...</Text>
+            <ProgressBar progress={sendingProgress} />
+          </View>
+        </View>
+      </Modal>
+
       <FlatList
         data={dataSource}
-        renderItem={({item}) => (
-          <View style={{flex: 1, flexDirection: 'column', margin: 1}}>
+        renderItem={({item, index}) => (
+          <View style={styles.gridImage}>
             <TouchableOpacity
-              key={item.id}
+              key={index}
               style={{flex: 1}}
-              onPress={() => showModalFunction(true, item.src)}>
+              onPress={() => showModalFunction(true, item.uid)}>
               <FastImage
                 style={styles.image}
                 source={{
-                  uri: item.src,
+                  uri: item.uid,
                 }}
               />
             </TouchableOpacity>
@@ -155,12 +247,15 @@ export default function MyPhotosPage() {
         animated
         dismissKeyboardOnPress
         onPressItem={() => {
-          setLoading(true);
           ImagePicker.showImagePicker(imagePickerOptions, (response) => {
             if (response.error) {
-              console.log('ImagePicker Error: ', response.error);
+              Toast.show({
+                text: 'Não foi possível buscar sua imagem',
+                buttonText: 'Ok',
+                duration: 4000,
+                type: 'danger',
+              });
             } else if (response.didCancel) {
-              setLoading(false);
               return;
             }
             const sourceImage = {
@@ -170,11 +265,7 @@ export default function MyPhotosPage() {
               path: getFileLocalPath(response),
               fileName: response.fileName,
             };
-
-            dataSource.unshift(sourceImage);
-            setImage(sourceImage);
             uploadData(sourceImage);
-            setLoading(false);
           });
         }}
       />
