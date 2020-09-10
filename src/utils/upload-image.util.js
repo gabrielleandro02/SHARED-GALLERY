@@ -9,7 +9,6 @@ export const imagePickerOptions = {
   title: 'Selecione uma imagem',
   cancelButtonTitle: 'Cancelar',
   takePhotoButtonTitle: 'Abrir Câmera',
-  chooseFromLibraryButtonTitle: 'Abrir Galeria',
   mediaType: 'photo',
   storageOptions: {
     waitUntilSaved: true,
