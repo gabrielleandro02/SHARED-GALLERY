@@ -1,25 +1,15 @@
-import React, {useState, useRef} from 'react';
+import React from 'react';
 import {
   View,
   Text,
   Image,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
-  Platform,
-  Button,
   SafeAreaView,
 } from 'react-native';
-import {Toast} from 'native-base';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
 import {useAuth} from '../contexts/auth.context';
-import {signUp} from '../services/auth.service';
-import {Formik} from 'formik';
-import * as Yup from 'yup';
 
 import UserMale from '../assets/user-male.png';
-
-import Logo from '../assets/logo.png';
 
 const styles = StyleSheet.create({
   container: {

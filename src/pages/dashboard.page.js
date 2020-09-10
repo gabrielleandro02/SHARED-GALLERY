@@ -1,39 +1,10 @@
 import React from 'react';
-import {Text, View, Button} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {useAuth} from '../contexts/auth.context';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import MyPhotosPage from './my-photos.page';
 import ProfilePage from './profile.page';
 import ExplorerPage from './explorer.page';
-
-function HomeScreen() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Home!</Text>
-    </View>
-  );
-}
-
-function SettingsScreen() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
-function MyDataScreen() {
-  const {logout} = useAuth();
-
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>MyDataScreen!</Text>
-      <Button onPress={() => logout()} title="Sair"></Button>
-    </View>
-  );
-}
 
 const Tab = createMaterialBottomTabNavigator();
 

@@ -10,8 +10,8 @@ const Routes = () => {
   if (loading) {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Text>Carregando...</Text>
-        <ActivityIndicator size={40} color="#000"></ActivityIndicator>
+        <Text style={{fontSize: 17}}>Carregando...</Text>
+        <ActivityIndicator size={50} color="#000"></ActivityIndicator>
       </View>
     );
   }
